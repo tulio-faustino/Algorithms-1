@@ -1,0 +1,7 @@
+bin/
+obj/
+*.o
+*.out
+.venv/
+__pycache__/
+*.png
