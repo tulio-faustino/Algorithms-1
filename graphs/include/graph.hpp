@@ -8,7 +8,7 @@
 #include <exception>
 
 template <typename T>
-class graph{ //Unwheighted
+class Graph{ //Unwheighted
 private:
     std::vector<std::vector<int>> adj_matrix;
     std::unordered_map<T, int> key_map; // maps data to key in O(1)
@@ -18,7 +18,7 @@ private:
     int key_idx;
 
 public:
-    graph(bool is_directed = false){
+    Graph(bool is_directed = false){
         key_idx = 0;
         is_directed = false;
     };
@@ -28,10 +28,8 @@ public:
             return key_map[data];
         }
 
-        int new_key = key_map.size();
-
         // Binds the data to the key (the sequential number it is putt on the graph)
-        key_map[data] = new_key;
+        key_map[data] = key_idx;
         data_vct.push_back(data);
         is_active.push_back(true);
 
@@ -41,9 +39,10 @@ public:
         }
 
         // Adds a new row
-        adj_matrix.push_back(std::vector<int>(new_key + 1, 0));
+        adj_matrix.push_back(std::vector<int>(key_idx + 1, 0));
 
-        return new_key;
+        key_idx++;
+        return key_idx;
 
     };
 
@@ -104,6 +103,30 @@ public:
         return true;
     }
     
+    std::vector<int> adj_row(int idx) const{
+        return adj_matrix[idx];
+    }
+
+    std::vector<int> edges(int idx) const{
+        std::vector<int> sub_list;
+        for (size_t i = 0; i < key_idx; i++){
+            if(adj_matrix[idx][i] != 0){
+                sub_list.push_back(i);
+            } 
+        }
+        return sub_list;
+    }
+
+    T data(int idx) const{
+        if(is_active[idx])
+            return data_vct[idx];
+        throw std::out_of_range();
+    }
+
+    size_t size() const{
+        return key_idx;
+    }
+
     const void print(bool as_data = false){
         if(!as_data){
              // Skips deactivated vertices
