@@ -22,7 +22,7 @@ Implementation of graph data structures and traversal algorithms in C++, featuri
 ### Preview
 
 <p align="center">
-  <img src="docs/dfs_example.png" alt="DFS Visualization" width="600"/>
+  <img src="graphs/docs/dfs_example.png" alt="DFS Visualization" width="600"/>
 </p>
 
 ---
