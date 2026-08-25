@@ -5,3 +5,6 @@ obj/
 .venv/
 __pycache__/
 *.png
+.vscode/
+include/json.hpp
+**/json.hpp

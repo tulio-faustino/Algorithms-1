@@ -7,8 +7,9 @@
 #include <iostream>
 #include <exception>
 
+// In the futre, I may implement the data_Graph. Not now though :D
 // template <typename T>
-// struct data_Graph{
+// class data_Graph{
 
 // }
 
@@ -36,8 +37,7 @@ public:
         // Adds a new row
         adj_matrix.push_back(std::vector<int>(key_idx + 1, 0));
 
-        key_idx++;
-        return key_idx;
+        return key_idx++;
 
     };
 
@@ -89,6 +89,10 @@ public:
             } 
         }
         return sub_list;
+    }
+
+    bool has_direction() const{
+        return is_directed;
     }
 
     size_t size() const{

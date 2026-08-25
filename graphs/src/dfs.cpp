@@ -1,5 +1,8 @@
 #include "../include/dfs.hpp"
+#include "../include/json.hpp"
 #include <iostream>
+#include <fstream>
+#include <exception>
 
 dfs_vertex::dfs_vertex(int _key, Colour _colour, int _pi) {
     key = _key;
@@ -72,4 +75,42 @@ void print_adjacencies_with_colours(Graph &G, const std::vector<dfs_vertex> &v) 
             }
         }
     }
+}
+
+void make_py_print(Graph &G, const std::vector<dfs_vertex> &v, const std::string &output_f) {
+    if (G.size() != v.size()) {
+        throw std::runtime_error("Graph dessynced to dfs_vertex");
+    }
+
+    nlohmann::json j;
+    j["is_directed"] = G.has_direction();
+
+    j["nodes"] = nlohmann::ordered_json::array();
+    for (size_t u = 0; u < v.size(); u++){
+        j["nodes"].push_back(v[u].key);
+    }
+
+    j["edges"] = nlohmann::ordered_json::array();
+    for (size_t u = 0; u < v.size(); u++){
+        j["edges"].push_back(G.edges(u));
+    }
+
+    j["nodes_print_data"] = nlohmann::ordered_json::array();
+    for (size_t u = 0; u < v.size(); u++){
+        j["nodes_print_data"].push_back({
+            {"id", v[u].key},
+            {"colour", colour_to_string(v[u].colour)}, // Converte o enum para string legível
+            {"pi", v[u].pi},
+            {"d", v[u].d},
+            {"f", v[u].f}
+        });
+    }
+
+    std::ofstream file(output_f);
+    if (!file.is_open()){
+        throw std::runtime_error("Could not open file for writing: " + output_f);
+    }
+    
+    file << j.dump(4);
+    file.close();
 }

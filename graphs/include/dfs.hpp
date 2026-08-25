@@ -4,6 +4,7 @@
 #include "../include/graph.hpp"
 #include <vector>
 #include <string>
+#include "../include/json.hpp"
 
 enum Colour {
     WHITE = 0,
@@ -28,5 +29,7 @@ void dfs_visit(Graph &G, std::vector<dfs_vertex> &v, int idx, int &time);
 std::vector<dfs_vertex> depth_first_search(Graph &G);
 
 void print_adjacencies_with_colours(Graph &G, const std::vector<dfs_vertex> &v);
+
+void make_py_print(Graph &G, const std::vector<dfs_vertex> &v, const std::string &output_f);
 
 #endif // DFS_HPP
