@@ -37,8 +37,7 @@ inline std::string colour_to_string(Colour c) {
     }
 }
 
-template <typename T>
-void dfs_visit(Graph<T> &G, std::vector<dfs_vertex> &v, int idx, int &time) {
+void dfs_visit(Graph &G, std::vector<dfs_vertex> &v, int idx, int &time) {
     time++;
     v[idx].d = time;
     v[idx].colour = GREY;
@@ -57,8 +56,7 @@ void dfs_visit(Graph<T> &G, std::vector<dfs_vertex> &v, int idx, int &time) {
     v[idx].colour = BLACK;
 }
 
-template <typename T>
-std::vector<dfs_vertex> depth_first_search(Graph<T> &G) {
+std::vector<dfs_vertex> depth_first_search(Graph &G) {
     std::vector<dfs_vertex> vertices;
     for (size_t i = 0; i < G.size(); i++) {
         vertices.push_back(dfs_vertex(i, WHITE, -1));
@@ -77,8 +75,7 @@ std::vector<dfs_vertex> depth_first_search(Graph<T> &G) {
     return vertices;
 }
 
-template <typename T>
-void print_adjacencies_with_colours(Graph<T> &G, const std::vector<dfs_vertex> &v) {
+void print_adjacencies_with_colours(Graph &G, const std::vector<dfs_vertex> &v) {
     for (size_t u = 0; u < G.size(); ++u) {
         std::cout << "Vértice " << u 
                   << " [" << colour_to_string(v[u].colour) 
