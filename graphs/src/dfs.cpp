@@ -54,6 +54,7 @@ std::vector<dfs_vertex> depth_first_search(Graph &G) {
             dfs_visit(G, vertices, i, time);
             flag_connected++; // If bigger than 1, the graph is not connected
         }
+        //return vertices;
     }
 
     return vertices;
