@@ -40,5 +40,15 @@ int main() {
     std::cout << "\n--- Apos Remover Arestas ---\n";
     g.print(true);
 
+    g.remove_vertex(v1);
+    g.remove_vertex(v7);
+
+    std::cout << "\n--- Apos Remover Vertices (Belo Horizonte e Salvador) ---\n";
+    g.print(true);
+
+    bool status_edge = g.add_edge(v1, v2);
+    std::cout << "\nTentativa de adicionar aresta em vertice removido: " 
+              << (status_edge ? "Sucesso" : "Falhou (Correto)") << "\n";
+
     return 0;
 }
