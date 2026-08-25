@@ -4,7 +4,7 @@ obj/
 *.out
 .venv/
 __pycache__/
-*.png
+png
 .vscode/
 include/json.hpp
 **/json.hpp
