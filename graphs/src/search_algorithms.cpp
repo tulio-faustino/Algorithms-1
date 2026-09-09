@@ -1,10 +1,11 @@
-#include "../include/dfs.hpp"
+#include "../include/search_algorithms.hpp"
 #include "../include/json.hpp"
 #include <iostream>
 #include <fstream>
 #include <exception>
+#include <queue>
 
-dfs_vertex::dfs_vertex(int _key, Colour _colour, int _pi) {
+s_vertex::s_vertex(int _key, Colour _colour, int _pi) {
     key = _key;
     colour = _colour;
     pi = _pi;
@@ -12,16 +13,7 @@ dfs_vertex::dfs_vertex(int _key, Colour _colour, int _pi) {
     f = -1;
 }
 
-std::string colour_to_string(Colour c) {
-    switch (c) {
-        case WHITE: return "BRANCO";
-        case GREY:  return "CINZA";
-        case BLACK: return "PRETO";
-        default:    return "DESCONHECIDO";
-    }
-}
-
-void dfs_visit(Graph &G, std::vector<dfs_vertex> &v, int idx, int &time) {
+void dfs_visit(Graph &G, std::vector<s_vertex> &v, int idx, int &time) {
     time++;
     v[idx].d = time;
     v[idx].colour = GREY;
@@ -40,10 +32,10 @@ void dfs_visit(Graph &G, std::vector<dfs_vertex> &v, int idx, int &time) {
     v[idx].colour = BLACK;
 }
 
-std::vector<dfs_vertex> depth_first_search(Graph &G) {
-    std::vector<dfs_vertex> vertices;
+std::vector<s_vertex> depth_first_search(Graph &G) {
+    std::vector<s_vertex> vertices;
     for (size_t i = 0; i < G.size(); i++) {
-        vertices.push_back(dfs_vertex(i, WHITE, -1));
+        vertices.push_back(s_vertex(i, WHITE, -1));
     }
 
     int time = 0;
@@ -60,7 +52,47 @@ std::vector<dfs_vertex> depth_first_search(Graph &G) {
     return vertices;
 }
 
-void print_adjacencies_with_colours(Graph &G, const std::vector<dfs_vertex> &v) {
+std::vector<s_vertex> breadth_first_search(Graph &G, int v_idx){
+    std::vector<s_vertex> vertices;
+    for(size_t i = 0; i < G.size(); i++){
+        vertices.push_back(s_vertex(i, WHITE, -1));
+    }
+    std::queue<int> Q;
+    vertices[v_idx].colour = GREY;
+    Q.push(v_idx);
+    int time = 0;
+
+    while(Q.size() != 0){
+        int current = Q.front();
+        Q.pop();
+        std::vector c_edges = G.edges(current);
+        for(size_t i = 0; i < c_edges.size(); i++){
+            if(vertices[c_edges[i]].colour == WHITE){
+                vertices[c_edges[i]].colour = GREY;
+                vertices[c_edges[i]].pi = current;
+                vertices[c_edges[i]].d = vertices[current].d + 1;
+                Q.push(c_edges[i]);
+            }
+            time++;
+        }
+        vertices[current].colour = BLACK;
+        vertices[current].f = time;
+    }
+
+    return vertices;
+
+};
+
+std::string colour_to_string(Colour c) {
+    switch (c) {
+        case WHITE: return "BRANCO";
+        case GREY:  return "CINZA";
+        case BLACK: return "PRETO";
+        default:    return "DESCONHECIDO";
+    }
+}
+
+void print_adjacencies_with_colours(Graph &G, const std::vector<s_vertex> &v) {
     for (size_t u = 0; u < G.size(); ++u) {
         std::cout << "Vértice " << u 
                   << " [" << colour_to_string(v[u].colour) 
@@ -78,13 +110,13 @@ void print_adjacencies_with_colours(Graph &G, const std::vector<dfs_vertex> &v) 
     }
 }
 
-void make_py_print(Graph &G, const std::vector<dfs_vertex> &v, const std::string &output_f) {
+void make_py_print(Graph &G, const std::vector<s_vertex> &v, const std::string &output_f) {
     if (G.size() != v.size()) {
-        throw std::runtime_error("Graph dessynced to dfs_vertex");
+        throw std::runtime_error("Graph dessynced to s_vertex");
     }
 
     nlohmann::json j;
-    j["is_directed"] = G.has_direction();
+    j["is_directed"] = G.is_directed();
 
     j["nodes"] = nlohmann::ordered_json::array();
     for (size_t u = 0; u < v.size(); u++){
