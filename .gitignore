@@ -1,10 +1,58 @@
+# ====================================
+# Pastas e arquivos de compilação / build
+# ====================================
 bin/
 obj/
 *.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+
+# ====================================
+# Executáveis e saídas de teste
+# ====================================
 *.out
-.venv/
-__pycache__/
-.vscode/
+*.exe
+**/termo
+**/server
+**/client
+**/main
+
+# ====================================
+# Arquivos de depuração e dumps
+# ====================================
+*.dSYM/
+*.su
+*.idb
+*.pdb
+vgcore.*
+core.*
+
+# ====================================
+# Dependências e bibliotecas externas
+# ====================================
 include/json.hpp
 **/json.hpp
+
+# ====================================
+# Python (ambientes e cache)
+# ====================================
+.venv/
+__pycache__/
+
+# ====================================
+# Arquivos de imagem / assets
+# ====================================
 *.png
+
+# ====================================
+# IDEs, editores e SO
+# ====================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
