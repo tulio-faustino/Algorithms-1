@@ -1,0 +1,10 @@
+bin/
+obj/
+*.o
+*.out
+.venv/
+__pycache__/
+.vscode/
+include/json.hpp
+**/json.hpp
+*.png
