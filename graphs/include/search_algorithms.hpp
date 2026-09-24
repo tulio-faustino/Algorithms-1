@@ -1,5 +1,5 @@
-#ifndef DFS_HPP
-#define DFS_HPP
+#ifndef SEARCH_HPP
+#define SEARCH_HPP
 
 #include "../include/graph.hpp"
 #include <vector>

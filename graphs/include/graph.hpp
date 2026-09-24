@@ -8,7 +8,7 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
-//#include <utility>
+#include "utilities.hpp"
 
 class Graph {
 protected:
@@ -25,6 +25,8 @@ public:
     virtual bool remove_edge(int idx1, int idx2) = 0;
     virtual std::vector<int> edges(int idx) const = 0; // Have to change to pair to be able to have weighted list graphs.
                                                        // And add a adj_list to return the same as this
+    virtual std::vector<std::pair<int, double>> w_edges(int idx){return {};}; // Chose to make a different w_edges method, to not mess up the already usable algorithms
+                                                                              // Kinda of a patchwork but it is what it is
 
     bool is_directed() const {
         return directed;
@@ -173,6 +175,71 @@ public:
             throw std::out_of_range("vertex index out of range");
         }
 
+        return adj_list[idx];
+    };
+};
+
+class w_list_Graph : public Graph{
+private:
+    std::vector<std::vector<std::pair<int, double>>> adj_list;
+public:
+    w_list_Graph(bool directed = false): Graph(directed){};
+
+    int add_vertex() override{
+        std::vector<std::pair<int, double>> nv_adj_list;
+        adj_list.push_back(nv_adj_list);
+        key_idx++;
+        return key_idx - 1;
+    };
+
+    bool remove_vertex(int idx) override {return 0;};
+
+    bool add_edge(int idx1, int idx2, int weight = 1) override{
+        if (idx1 > key_idx || idx2 > key_idx){
+            return false;
+        }
+
+        auto it = std::find_if(
+            adj_list[idx1].begin(), 
+            adj_list[idx1].end(),
+            [idx2](const std::pair<int, double>& edge) {
+                return edge.first == idx2;
+            }
+        );
+
+        if (it != adj_list[idx1].end()){
+            return false; 
+        }
+
+        adj_list[idx1].emplace_back(idx2, weight);
+
+        if (!this->directed){ 
+            adj_list[idx2].emplace_back(idx1, weight);
+        }
+
+        return true;
+    };
+
+    bool remove_edge(int idx1, int idx2) override{
+        if(idx1 < 0 || idx1 > this->key_idx || idx2 < 0 || idx2 > this->key_idx)
+            throw std::out_of_range("Index out of range");
+        return 0;
+        // I'll implement this later, kinda useless right now
+    };
+
+    std::vector<int> edges(int idx) const override {
+        std::vector<int> unweighed_edges;
+        if(idx < 0 || idx > this->key_idx)
+            throw std::out_of_range("Index out of range");
+        for (int i = 0; i < adj_list[idx].size(); i++){
+            unweighed_edges.push_back(adj_list[idx][i].first);
+        }
+        return unweighed_edges;
+    };
+
+    std::vector<std::pair<int,double>> w_edges(int idx) const {
+        if(idx < 0 || idx > this->key_idx)
+            throw std::out_of_range("Index out of range");
         return adj_list[idx];
     };
 };
