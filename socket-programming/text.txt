@@ -1,0 +1,8 @@
+Segmentation fault corrigido utilizando gdb
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000555555555b0d in main (argc=4, argv=0x7fffffffd628) at src/server.c:172
+172                     if (resolution[i] != 2){
+(gdb) 
+
+Estava inicialiazando o jogo de forma errada. Ao invés de passar, estava executando a função de inicializar sem retornar

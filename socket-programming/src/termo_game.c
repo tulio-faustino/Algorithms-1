@@ -134,25 +134,3 @@ int *try_guess(termo_game *game, const char *guess){
 
     return result;
 } 
-
-char *make_clue(const int *game_result, const char *guess){
-    char *clue = (char*)malloc((strlen(guess) + 1)*sizeof(char));
-    clue[strlen(guess)] = '\0';
-    for(int i = 0; i < (int)strlen(guess); i++){
-        switch (game_result[i]){
-            case 0:
-                clue[i] = '_';
-                break;
-            case 1:
-                clue[i] = '*';
-                break;
-            case 2:
-                clue[i] = toupper((unsigned char)guess[i]);
-                break;
-            default:
-                //Não é pra existir game_result sem ser com 0 1 ou 2 em todas posições
-                return NULL;
-        }
-    }
-    return clue;
-}

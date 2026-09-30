@@ -39,13 +39,5 @@ void destroy_game(termo_game *game);
  */
 int *try_guess(termo_game *game, const char *guess);
 
-/**
- * Converte o array de feedback numérico (0, 1, 2) em uma string legível:
- *   '_' = letra errada
- *   '*' = letra deslocada
- *   MAIÚSCULA = correta
- * Retorna uma string alocada dinamicamente terminada em '\0'.
- */
-char *make_clue(const int *game_result, const char *guess);
 
 #endif 
