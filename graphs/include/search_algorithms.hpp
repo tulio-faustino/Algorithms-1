@@ -17,7 +17,7 @@ struct s_vertex {
     Colour colour; // 0 for white, 1 for grey and 2 for black
     int pi;        // refers to the last visited vertex, -1 for NIL
     int d;
-    int f;
+    int f; 
 
     s_vertex(int _key, Colour _colour = WHITE, int _pi = -1);
 };

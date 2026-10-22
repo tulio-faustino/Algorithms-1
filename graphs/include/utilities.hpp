@@ -1,5 +1,5 @@
-#ifndef UTILITIES.HPP
-#define UTILITIES.HPP
+#ifndef UTILITIES_HPP
+#define UTILITIES_HPP
 
 #include <unordered_map>
 #include <utility>
@@ -15,7 +15,7 @@ private:
     mutable std::unordered_map<T, Node> nodes;
 
 public:
-    DisjointSet() = default;
+    disjoint_Set() = default;
 
     void make_set(const T& item) {
         if (nodes.find(item) == nodes.end()) {
@@ -64,4 +64,4 @@ public:
     }
 };
 
-#endif // UTILITIES.HPP
+#endif // UTILITIES_HPP

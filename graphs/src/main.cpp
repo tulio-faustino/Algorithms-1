@@ -2,8 +2,11 @@
 #include <fstream>
 #include <cstdlib>
 #include <string>
+#include <sstream>
+#include <vector>
 #include "../include/graph.hpp"
 #include "../include/search_algorithms.hpp"
+#include "../include/minimal_path.hpp"
 
 
 int main(int argc, char* argv[]) {
@@ -37,6 +40,8 @@ int main(int argc, char* argv[]) {
         g = new list_Graph(graph_direction);
     }else if (graph_type == 1){
         g = new matrix_Graph(graph_direction);
+    }else if (graph_type == 2){
+        g = new w_list_Graph(graph_direction);
     }else{
         std::cout << "Type of graph passed wrong";
         return 0;
@@ -47,12 +52,23 @@ int main(int argc, char* argv[]) {
     }
 
     int v1, v2;
-    while(file >> v1 >> v2){
-        g->add_edge(v1, v2);
+    if (graph_type == 2){
+        int w;
+        while(file >> v1 >> v2 >> w){
+            g->add_edge(v1, v2, w);
+        }
+    }else{
+        while(file >> v1 >> v2){
+            g->add_edge(v1, v2);
+        }
     }
 
     std::string operation;
     std::vector<s_vertex> searched_vertices;
+    std::vector<d_vertex> dijkstra_vertices;
+    std::vector<int> dijkstra_dests;
+    int dijkstra_src = -1;
+    bool ran_dijkstra = false;
     int search_starter;
 
 
@@ -70,8 +86,23 @@ int main(int argc, char* argv[]) {
             //Indexed depth first search;
             return 0;
             break;
+        }else if(operation == "dijkstra"){
+            // Reads the source and the destinations from the rest of the line
+            std::cin >> dijkstra_src;
+            std::string dests_line;
+            std::getline(std::cin, dests_line);
+            std::istringstream dests_stream(dests_line);
+            int dest;
+            while(dests_stream >> dest){
+                dijkstra_dests.push_back(dest);
+            }
+
+            dijkstra_vertices = dijkstra(*g, dijkstra_src);
+            print_dijkstra_paths(dijkstra_vertices, dijkstra_src, dijkstra_dests);
+            ran_dijkstra = true;
+            break;
         }else{
-            std::cout << "invalid operation. The correct ones are: \nbfs - breadth first search \ndfs - depth first search\n i_dfs - indexed depth first search\nDo you want to proceed with the program and try again? [Y] [N]\n";
+            std::cout << "invalid operation. The correct ones are: \nbfs - breadth first search \ndfs - depth first search\n i_dfs - indexed depth first search\ndijkstra <origem> <destino...> - menor caminho\nDo you want to proceed with the program and try again? [Y] [N]\n";
             bool try_again;
             std::cin >> try_again;
             if(tolower(try_again) == 'n'){
@@ -88,7 +119,11 @@ int main(int argc, char* argv[]) {
 
     // Exporta para JSON e chama a visualização Python
     std::string json_path = "bin/graph_data.json";
-    make_py_print(*g, searched_vertices, json_path);
+    if (ran_dijkstra){
+        make_py_print_w(*g, dijkstra_vertices, dijkstra_src, dijkstra_dests, json_path);
+    }else{
+        make_py_print(*g, searched_vertices, json_path);
+    }
 
     std::cout << "JSON gerado em " << json_path << ". Abrindo visualizador...\n";
     std::string command = "python3 scripts/plot_graph.py " + json_path;

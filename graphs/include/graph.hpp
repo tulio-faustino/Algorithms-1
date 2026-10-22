@@ -25,8 +25,8 @@ public:
     virtual bool remove_edge(int idx1, int idx2) = 0;
     virtual std::vector<int> edges(int idx) const = 0; // Have to change to pair to be able to have weighted list graphs.
                                                        // And add a adj_list to return the same as this
-    virtual std::vector<std::pair<int, double>> w_edges(int idx){return {};}; // Chose to make a different w_edges method, to not mess up the already usable algorithms
-                                                                              // Kinda of a patchwork but it is what it is
+    virtual std::vector<std::pair<int, double>> w_edges(int idx) const {return {};}; // Chose to make a different w_edges method, to not mess up the already usable algorithms
+                                                                                     // Kinda of a patchwork but it is what it is
 
     bool is_directed() const {
         return directed;
@@ -237,7 +237,7 @@ public:
         return unweighed_edges;
     };
 
-    std::vector<std::pair<int,double>> w_edges(int idx) const {
+    std::vector<std::pair<int,double>> w_edges(int idx) const override {
         if(idx < 0 || idx > this->key_idx)
             throw std::out_of_range("Index out of range");
         return adj_list[idx];
